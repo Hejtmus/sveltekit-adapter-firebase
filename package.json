@@ -1,7 +1,7 @@
 {
-	"name": "@genoacms/sveltekit-adapter-cloud-run-functions",
+	"name": "@filiph/sveltekit-adapter-firebase",
 	"version": "1.0.0",
-	"description": "Adapter for SvelteKit apps that generates a Cloud Run Function",
+	"description": "Adapter for SvelteKit apps that generates a Firebase Function",
 	"keywords": [
 		"adapter",
 		"deploy",
@@ -12,7 +12,7 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/GenoaCMS/sveltekit-adapter-cloud-run-functions"
+		"url": "https://github.com/Hejtmus/sveltekit-adapter-firebase.git"
 	},
 	"license": "MIT",
 	"type": "module",
