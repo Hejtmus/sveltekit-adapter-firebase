@@ -24,21 +24,23 @@ export default function (opts = {}) {
 
 		async adapt(builder) {
 			const tmp = builder.getBuildDirectory('sveltekit-adapter-firebase');
+      const functionPath = join(outDir, functionsDir, functionName)
+      const publicPath = join(outDir, publicDir)
 
-			builder.rimraf(join(outDir, functionsDir, functionName));
-			builder.rimraf(join(outDir, publicDir));
+			builder.rimraf(functionPath);
+			builder.rimraf(publicPath);
 			builder.rimraf(tmp);
 			builder.mkdirp(tmp);
 
 			builder.log.minor('Copying assets');
-			builder.writeClient(`${outDir}${publicDir}${builder.config.kit.paths.base}`);
-			builder.writePrerendered(`${outDir}${publicDir}/prerendered${builder.config.kit.paths.base}`);
+			builder.writeClient(join(publicPath, builder.config.kit.paths.base));
+			builder.writePrerendered(join(publicPath, 'prerendered', builder.config.kit.paths.base));
 
 			if (precompress) {
 				builder.log.minor('Compressing assets');
 				await Promise.all([
-					builder.compress(`${outDir}${publicDir}`),
-					builder.compress(`${outDir}${publicDir}/prerendered`)
+					builder.compress(publicPath),
+					builder.compress(join(publicPath, 'prerendered'))
 				]);
 			}
 
@@ -82,13 +84,13 @@ export default function (opts = {}) {
 			});
 
 			await bundle.write({
-				dir: `${outDir}${functionsDir}${functionName}`,
+				dir: functionPath,
 				format: 'esm',
 				sourcemap: true,
 				chunkFileNames: 'chunks/[name]-[hash].js'
 			});
 
-			builder.copy(files, outDir, {
+			builder.copy(files, functionPath, {
 				replace: {
 					ENV: './env.js',
 					HANDLER: './handler.js',

@@ -1,6 +1,6 @@
 {
 	"name": "@filiph/sveltekit-adapter-firebase",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Adapter for SvelteKit apps that generates a Firebase Function",
 	"keywords": [
 		"adapter",
