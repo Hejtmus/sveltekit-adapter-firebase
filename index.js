@@ -84,7 +84,7 @@ export default function (opts = {}) {
 			});
 
 			await bundle.write({
-				dir: functionPath,
+				dir: join(functionPath, 'server'),
 				format: 'esm',
 				sourcemap: true,
 				chunkFileNames: 'chunks/[name]-[hash].js'
