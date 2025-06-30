@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { rollup } from 'rollup';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
@@ -24,7 +25,8 @@ export default function (opts = {}) {
 		async adapt(builder) {
 			const tmp = builder.getBuildDirectory('sveltekit-adapter-firebase');
 
-			builder.rimraf(outDir);
+			builder.rimraf(join(outDir, functionsDir, functionName));
+			builder.rimraf(join(outDir, publicDir));
 			builder.rimraf(tmp);
 			builder.mkdirp(tmp);
 
