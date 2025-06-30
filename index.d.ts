@@ -6,7 +6,10 @@ declare global {
 }
 
 interface AdapterOptions {
-	out?: string;
+	outDir?: string;
+	functionsDir?: string;
+	publicDir?: string;
+	functionName?: string;
 	precompress?: boolean;
 	envPrefix?: string;
 }

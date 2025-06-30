@@ -9,27 +9,34 @@ const files = fileURLToPath(new URL('./files', import.meta.url).href);
 
 /** @type {import('./index.js').default} */
 export default function (opts = {}) {
-	const { out = 'build', precompress = true, envPrefix = '' } = opts;
+	const { 
+    outDir = './',
+    functionsDir = 'functions/',
+    publicDir = 'public/',
+    functionName = 'sveltekit',
+    precompress = true,
+    envPrefix = ''
+  } = opts;
 
 	return {
-		name: '@genoacms/sveltekit-adapter-cloud-run-functions',
+		name: '@filiph/sveltekit-adapter-firebase',
 
 		async adapt(builder) {
-			const tmp = builder.getBuildDirectory('adapter-cloud-run-functions');
+			const tmp = builder.getBuildDirectory('sveltekit-adapter-firebase');
 
-			builder.rimraf(out);
+			builder.rimraf(outDir);
 			builder.rimraf(tmp);
 			builder.mkdirp(tmp);
 
 			builder.log.minor('Copying assets');
-			builder.writeClient(`${out}/client${builder.config.kit.paths.base}`);
-			builder.writePrerendered(`${out}/prerendered${builder.config.kit.paths.base}`);
+			builder.writeClient(`${outDir}${publicDir}${builder.config.kit.paths.base}`);
+			builder.writePrerendered(`${outDir}${publicDir}/prerendered${builder.config.kit.paths.base}`);
 
 			if (precompress) {
 				builder.log.minor('Compressing assets');
 				await Promise.all([
-					builder.compress(`${out}/client`),
-					builder.compress(`${out}/prerendered`)
+					builder.compress(`${outDir}${publicDir}`),
+					builder.compress(`${outDir}${publicDir}/prerendered`)
 				]);
 			}
 
@@ -73,13 +80,13 @@ export default function (opts = {}) {
 			});
 
 			await bundle.write({
-				dir: `${out}/server`,
+				dir: `${outDir}${functionsDir}${functionName}`,
 				format: 'esm',
 				sourcemap: true,
 				chunkFileNames: 'chunks/[name]-[hash].js'
 			});
 
-			builder.copy(files, out, {
+			builder.copy(files, outDir, {
 				replace: {
 					ENV: './env.js',
 					HANDLER: './handler.js',
