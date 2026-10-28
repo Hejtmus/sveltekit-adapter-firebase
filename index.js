@@ -33,7 +33,7 @@ export default function (opts = {}) {
 			builder.mkdirp(tmp);
 
 			builder.log.minor('Copying assets');
-			builder.writeClient(join(publicPath, builder.config.kit.paths.base));
+			builder.writeClient(join(publicPath, builder.config.paths.base));
 			builder.writePrerendered(join(functionPath, 'prerendered'));
 
 			if (precompress) {
@@ -47,13 +47,15 @@ export default function (opts = {}) {
 			builder.log.minor('Building server');
 
 			builder.writeServer(tmp);
+			builder.generateServerInstance(`${tmp}/instance.js`, { serverDirectory: tmp });
 
 			writeFileSync(
 				`${tmp}/manifest.js`,
 				[
-					`export const manifest = ${builder.generateManifest({ relativePath: './' })};`,
+					"export { server } from './instance.js';",
 					`export const prerendered = new Set(${JSON.stringify(builder.prerendered.paths)});`,
-					`export const base = ${JSON.stringify(builder.config.kit.paths.base)};`
+					`export const base = ${JSON.stringify(builder.config.paths.base)};`,
+					`export const appPath = ${JSON.stringify(builder.getAppPath())};`
 				].join('\n\n')
 			);
 
@@ -64,7 +66,6 @@ export default function (opts = {}) {
 			// will get included in the bundled code
 			const bundle = await rollup({
 				input: {
-					index: `${tmp}/index.js`,
 					manifest: `${tmp}/manifest.js`
 				},
 				external: [
@@ -95,8 +96,6 @@ export default function (opts = {}) {
 					ENV: './env.js',
 					HANDLER: './handler.js',
 					MANIFEST: './server/manifest.js',
-					SERVER: './server/index.js',
-					SHIMS: './shims.js',
 					ENV_PREFIX: JSON.stringify(envPrefix)
 				}
 			});
