@@ -34,13 +34,13 @@ export default function (opts = {}) {
 
 			builder.log.minor('Copying assets');
 			builder.writeClient(join(publicPath, builder.config.kit.paths.base));
-			builder.writePrerendered(join(publicPath, 'prerendered', builder.config.kit.paths.base));
+			builder.writePrerendered(join(functionPath, 'prerendered'));
 
 			if (precompress) {
 				builder.log.minor('Compressing assets');
 				await Promise.all([
 					builder.compress(publicPath),
-					builder.compress(join(publicPath, 'prerendered'))
+					builder.compress(join(functionPath, 'prerendered'))
 				]);
 			}
 
