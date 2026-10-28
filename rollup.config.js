@@ -40,14 +40,6 @@ export default [
 			inlineDynamicImports: true
 		},
 		plugins: [nodeResolve(), commonjs(), json(), prefixBuiltinModules()],
-		external: ['ENV', 'MANIFEST', 'SERVER', 'SHIMS']
-	},
-	{
-		input: 'src/shims.js',
-		output: {
-			file: 'files/shims.js',
-			format: 'esm'
-		},
-		plugins: [nodeResolve(), commonjs(), prefixBuiltinModules()]
+		external: ['ENV', 'MANIFEST']
 	}
 ];

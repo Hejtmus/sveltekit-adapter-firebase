@@ -7,15 +7,10 @@ declare module 'HANDLER' {
 }
 
 declare module 'MANIFEST' {
-	import { SSRManifest } from '@sveltejs/kit';
-
+	export const server: import('@sveltejs/kit').Server;
 	export const base: string;
-	export const manifest: SSRManifest;
+	export const appPath: string;
 	export const prerendered: Set<string>;
-}
-
-declare module 'SERVER' {
-	export { Server } from '@sveltejs/kit';
 }
 
 declare namespace App {

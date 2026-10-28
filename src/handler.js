@@ -1,4 +1,3 @@
-import 'SHIMS';
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
@@ -6,12 +5,10 @@ import sirv from 'sirv';
 import { fileURLToPath } from 'node:url';
 import { parse as polka_url_parser } from '@polka/url';
 import { setResponse, createReadableStream } from '@sveltejs/kit/node';
-import { Server } from 'SERVER';
-import { manifest, prerendered, base } from 'MANIFEST';
+import { server, prerendered, base, appPath } from 'MANIFEST';
 
 /* global ENV_PREFIX */
 
-const server = new Server(manifest);
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -37,7 +34,7 @@ function serve(path, client = false) {
 				client &&
 				((res, pathname) => {
 					// only apply to build directory, not e.g. version.json
-					if (pathname.startsWith(`/${manifest.appPath}/immutable/`) && res.statusCode === 200) {
+					if (pathname.startsWith(`/${appPath}/immutable/`) && res.statusCode === 200) {
 						res.setHeader('cache-control', 'public,max-age=31536000,immutable');
 					}
 				})
